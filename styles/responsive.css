@@ -1,0 +1,17 @@
+/* Responsive adjustments */
+        @media (max-width: 480px) {
+            .game-card {
+                min-width: 120px;
+                height: 100px;
+                padding: 15px;
+            }
+            
+            #dayguesser-game #game-container {
+                padding: 15px;
+            }
+            
+            #dayguesser-game #buttons button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }

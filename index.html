@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DayGuesser by Royan the Coder</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body data-theme="dark">
+    <div class="floating-particles" id="particles"></div>
+    
+    <!-- Menu Utama -->
+    <div class="app-container" id="main-menu">
+        <header class="header">
+            <div class="logo">DayGuesser.com</div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </header>
+
+        <main class="content">
+            <!-- Play Tab -->
+            <div id="play" class="tab-content active">
+                <div class="section-title">Multiplayer</div>
+                <div class="card-container">
+                    <div class="game-card disabled" aria-disabled="true" title="Not available">
+                        <div class="card-title">Blind Mode</div>
+                        <div class="card-subtitle">coming soon</div>
+                    </div>
+                    <div class="game-card disabled" aria-disabled="true" title="Not available">
+                        <div class="card-title">Battle of Time</div>
+                        <div class="card-subtitle">coming soon</div>
+                    </div>
+                    <div class="game-card disabled" aria-disabled="true" title="Not available">
+                        <div class="card-title">Classic</div>
+                        <div class="card-subtitle">Tidak tersedia</div>
+                    </div>
+                    <div class="game-card disabled" aria-disabled="true" title="Not available">
+                        <div class="card-title">Sprint</div>
+                        <div class="card-subtitle">coming soon</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Singleplayer</div>
+                <div class="card-container">
+                    <div class="game-card" data-mode="sprint-single">
+                        <div class="card-title">Sprint</div>
+                        <div class="card-subtitle">raih skor tertinggi dalam waktu terbatas</div>
+                    </div>
+
+                    <!-- changed: blind-single menjadi flip card -->
+                    <div class="game-card flip-card" data-mode="blind-single" tabindex="0" role="button" aria-pressed="false">
+                        <div class="flip-inner">
+                            <div class="flip-front">
+                                <div class="card-image">
+                                    <img src="assets/game card/blind mode.png" alt="Blind Mode" />
+                                </div>
+                                <div class="front-content">
+                                    <button class="info-btn info-btn-front" onclick="event.stopPropagation(); flipCard(this.closest('.flip-card'), event)" aria-label="Show info">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="card-title">Blind Mode</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flip-back">
+                                <div class="back-content">
+                                    <button class="info-btn info-btn-back" onclick="flipCard(this.closest('.flip-card'), event)" aria-label="Close info">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="card-back-title">Blind Mode</div>
+                                    <div class="card-back-text">Tanggal pada roda sengaja disamarkan agar kamu mengandalkan memori dan insting. Jawab sebanyak mungkin sebelum nyawa habis.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="game-card" data-mode="time-single">
+                        <div class="card-title">Time Attack</div>
+                        <div class="card-subtitle">Beat your time</div>
+                    </div>
+                    <div class="game-card disabled" aria-disabled="true" title="Not available">
+                        <div class="card-title">Classic</div>
+                        <div class="card-subtitle">Tidak tersedia</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Pengaturan</div>
+                <div class="settings-section">
+                    <div class="setting-item">
+                        <span>Efek Suara</span>
+                        <div class="switch active" onclick="toggleSwitch(this)">
+                            <div class="switch-thumb"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Musik Latar</span>
+                        <div class="switch active" onclick="toggleSwitch(this)">
+                            <div class="switch-thumb"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Getaran</span>
+                        <div class="switch" onclick="toggleSwitch(this)">
+                            <div class="switch-thumb"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Notifikasi</span>
+                        <div class="switch active" onclick="toggleSwitch(this)">
+                            <div class="switch-thumb"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div id="leaderboard" class="tab-content">
+                <div class="section-title">🏆 Top Players</div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">
+                        <div class="rank-number" style="background: #ffd700;">1</div>
+                        <div>
+                            <div style="font-weight: 600;">ProGamer123</div>
+                            <div style="color: var(--text-secondary); font-size: 14px;">15,420 points</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">
+                        <div class="rank-number" style="background: #c0c0c0;">2</div>
+                        <div>
+                            <div style="font-weight: 600;">SpeedRunner</div>
+                            <div style="color: var(--text-secondary); font-size: 14px;">14,890 points</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">
+                        <div class="rank-number" style="background: #cd7f32;">3</div>
+                        <div>
+                            <div style="font-weight: 600;">QuizMaster</div>
+                            <div style="color: var(--text-secondary); font-size: 14px;">13,560 points</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">
+                        <div class="rank-number">4</div>
+                        <div>
+                            <div style="font-weight: 600;">BrainPower</div>
+                            <div style="color: var(--text-secondary); font-size: 14px;">12,340 points</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">
+                        <div class="rank-number">5</div>
+                        <div>
+                            <div style="font-weight: 600;">ThinkFast</div>
+                            <div style="color: var(--text-secondary); font-size: 14px;">11,780 points</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learn Tab -->
+            <div id="learn" class="tab-content">
+                <div class="section-title">📚 Learn & Improve</div>
+                <div class="learn-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">🎯 Game Strategies</div>
+                    <div style="color: var(--text-secondary); font-size: 14px;">Pelajari strategi terbaik untuk meningkatkan skor dan mengalahkan lawan</div>
+                </div>
+                <div class="learn-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">⚡ Speed Tips</div>
+                    <div style="color: var(--text-secondary); font-size: 14px;">Tips dan trik untuk meningkatkan kecepatan bermain</div>
+                </div>
+                <div class="learn-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">🧠 Memory Techniques</div>
+                    <div style="color: var(--text-secondary); font-size: 14px;">Teknik memori yang akan membantu dalam mode blind</div>
+                </div>
+                <div class="learn-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">🏆 Tournament Guide</div>
+                    <div style="color: var(--text-secondary); font-size: 14px;">Panduan lengkap untuk mengikuti turnamen</div>
+                </div>
+                <div class="learn-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">📊 Analytics</div>
+                    <div style="color: var(--text-secondary); font-size: 14px;">Analisis performa untuk identifikasi area improvement</div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile" class="tab-content">
+                <div class="profile-card">
+                    <div class="profile-avatar">JD</div>
+                    <div style="text-align: center;">
+                        <div style="font-weight: 600; font-size: 18px; margin-bottom: 4px;">John Doe</div>
+                        <div style="color: var(--text-secondary);">Level 25 • Expert Player</div>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <div style="font-weight: 600; margin-bottom: 16px;">📊 Statistics</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>Games Played:</span>
+                        <span style="font-weight: 600;">1,247</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>Win Rate:</span>
+                        <span style="font-weight: 600; color: #27ae60;">73%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>Best Streak:</span>
+                        <span style="font-weight: 600;">42 wins</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Average Score:</span>
+                        <span style="font-weight: 600;">8,540</span>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div style="font-weight: 600; margin-bottom: 16px;">🏆 Achievements</div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span style="background: var(--gradient-1); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">First Win</span>
+                        <span style="background: var(--gradient-2); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Speed Demon</span>
+                        <span style="background: var(--gradient-3); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Perfect Game</span>
+                        <span style="background: var(--gradient-4); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Master Player</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('play', this)">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <span class="nav-label">Play</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('leaderboard', this)">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 14H5v5h2v-5zm3-7H8v12h2V7zm3-4h-2v16h2V3zm3 6h-2v10h2V9z"/>
+                </svg>
+                <span class="nav-label">Leaderboard</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('learn', this)">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                <span class="nav-label">Learn</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('profile', this)">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+                <span class="nav-label">Profile</span>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- DayGuesser Game Screen -->
+    <div id="game-screen" style="display:none">
+        <div id="game-container">
+            <div class="game-header">
+                <div class="game-title">DayGuesser</div>
+                <div class="game-controls">
+                    <button class="game-btn" onclick="backToMenu()">Kembali</button>
+                    <button class="game-btn" id="restart-game-btn">Restart</button>
+                </div>
+            </div>
+            
+            <div id="dayguesser-game">
+                <div id="overlay" style="display:none"></div>
+
+                <!-- countdown hanya berisi angka dan ditutup dengan benar -->
+                <div id="countdown" style="font-size: 200px; display: none; margin: 20px;"></div>
+
+                <!-- area permainan utama (pastikan id sesuai dengan game.js) -->
+                <div id="game-area">
+                    <div id="timer-display">Sisa waktu: 60 detik</div>
+                    <div id="combo-display">
+                        <span>Multiplier: <span id="multiplier-value">1x</span></span>
+                        <div id="combo-indicator">
+                            <span class="combo-dot"></span>
+                            <span class="combo-dot"></span>
+                            <span class="combo-dot"></span>
+                            <span class="combo-dot"></span>
+                            <span class="combo-dot"></span>
+                        </div>
+                    </div>
+                    <div id="score-lives">Skor: 0 | Nyawa: 5 | Benar: 0</div>
+
+                    <!-- pastikan id date-wheel ada -->
+                    <div id="wheel-container">
+                        <div id="date-wheel"></div>
+                    </div>
+
+                    <div id="buttons"></div>
+
+                    <button id="restart-btn">Restart Game</button>
+                    <button id="settings-btn">Shortcut Settings</button>
+                    <button onclick="repeatSpeech()">🔁 Ulang Pengucapan</button>
+                </div>
+
+                <div id="popup" style="display:none">
+                  <h2>Permainan Selesai</h2>
+                    <div class="popup-score-label">Skor:</div>
+                    <div id="final-score" class="popup-score-value"></div>
+                    <div id="final-correct" class="popup-correct"></div>
+                    <button onclick="restartGame()">Main Lagi</button>
+                </div>
+
+                <div id="settings-popup" style="display:none">
+                    <h2>Pengaturan Shortcut</h2>
+                    <form id="shortcut-form">
+                        <label>Senin: <input type="text" id="shortcut-senin" value="1" maxlength="1" required></label><br>
+                        <label>Selasa: <input type="text" id="shortcut-selasa" value="2" maxlength="1" required></label><br>
+                        <label>Rabu: <input type="text" id="shortcut-rabu" value="3" maxlength="1" required></label><br>
+                        <label>Kamis: <input type="text" id="shortcut-kamis" value="4" maxlength="1" required></label><br>
+                        <label>Jumat: <input type="text" id="shortcut-jumat" value="5" maxlength="1" required></label><br>
+                        <label>Sabtu: <input type="text" id="shortcut-sabtu" value="6" maxlength="1" required></label><br>
+                        <label>Minggu: <input type="text" id="shortcut-minggu" value="0" maxlength="1" required></label><br>
+                        <label>Main Lagi: <input type="text" id="shortcut-restart" value="Enter" required></label><br>
+                        <label>Ulang Pengucapan: <input type="text" id="shortcut-repeat" value=" " maxlength="1" required></label><br>
+                        <button type="submit">Simpan</button>
+                        <button type="button" id="cancel-settings">Batal</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="scripts/gameCard.js"></script>
+    <script src="scripts/game.js"></script>
+    <script src="scripts/main.js">
+    </script>
+</body>
+</html>
