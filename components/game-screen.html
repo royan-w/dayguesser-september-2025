@@ -1,0 +1,76 @@
+<div id="game-screen" style="display:none">
+    <div id="game-container">
+        <div class="game-header">
+            <div class="game-title">DayGuesser</div>
+            <div class="game-controls">
+                <button id="settings-btn" aria-label="Settings">⚙️</button>
+                <button id="restart-btn" aria-label="Restart">⟲</button>
+            </div>
+        </div>
+        
+        <div id="dayguesser-game">
+            <div id="overlay" style="display:none"></div>
+
+            <div id="countdown" style="font-size:200px; display:none; margin:20px;"></div>
+
+            <div id="game-area">
+                <!-- HUD -->
+                <div id="hud" class="hud">
+                    <div id="timer-display">Sisa waktu: 60 detik</div>
+                    <div id="score-lives">Skor: 0 | Nyawa: 5 | Benar: 0</div>
+                    <div id="multiplier">Multiplier: <span id="multiplier-value">1x</span></div>
+                    <div id="combo" class="combo">
+                        <span class="combo-dot"></span>
+                        <span class="combo-dot"></span>
+                        <span class="combo-dot"></span>
+                        <span class="combo-dot"></span>
+                        <span class="combo-dot"></span>
+                    </div>
+                </div>
+
+                <!-- Date wheel / questions -->
+                <div id="date-wheel" class="date-wheel"></div>
+
+                <!-- Buttons (hari) -->
+                <div id="buttons" class="buttons-row"></div>
+            </div>
+
+            <!-- Popup hasil game -->
+            <div id="popup" style="display:none">
+                <div class="popup-content">
+                    <h2>Game Over</h2>
+                    <div class="final-score-large">Skor akhir: <span id="final-score">0</span></div>
+                    <div id="final-correct">(0 jawaban benar)</div>
+                    <div class="popup-actions">
+                        <button id="restart-game-btn">Main Lagi</button>
+                        <button id="back-menu-btn" onclick="backToMenu()">Kembali</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings popup (placeholder, form fields optional) -->
+            <div id="settings-popup" style="display:none">
+                <div class="settings-content">
+                    <h3>Pengaturan</h3>
+                    <form id="shortcut-form">
+                        <!-- optional inputs; script checks existence before using -->
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <label><span>Senin</span><input id="shortcut-senin" maxlength="1"></label>
+                            <label><span>Selasa</span><input id="shortcut-selasa" maxlength="1"></label>
+                            <label><span>Rabu</span><input id="shortcut-rabu" maxlength="1"></label>
+                            <label><span>Kamis</span><input id="shortcut-kamis" maxlength="1"></label>
+                            <label><span>Jumat</span><input id="shortcut-jumat" maxlength="1"></label>
+                            <label><span>Sabtu</span><input id="shortcut-sabtu" maxlength="1"></label>
+                            <label><span>Minggu</span><input id="shortcut-minggu" maxlength="1"></label>
+                            <label><span>Repeat</span><input id="shortcut-repeat" maxlength="1"></label>
+                        </div>
+                        <div style="margin-top:8px;">
+                            <button type="submit">Simpan</button>
+                            <button type="button" id="cancel-settings">Batal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -72,5 +72,4 @@
                 particlesContainer.appendChild(particle);
             }
         }
-        
-                
+

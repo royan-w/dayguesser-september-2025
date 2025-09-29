@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DayGuesser by Royan the Coder</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/game.css">
 </head>
 <body data-theme="dark">
     <div class="floating-particles" id="particles"></div>
@@ -137,79 +138,10 @@
             </div>
 
             <!-- Leaderboard Tab -->
-            <div id="leaderboard" class="tab-content">
-                <div class="section-title">🏆 Top Players</div>
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">
-                        <div class="rank-number" style="background: #ffd700;">1</div>
-                        <div>
-                            <div style="font-weight: 600;">ProGamer123</div>
-                            <div style="color: var(--text-secondary); font-size: 14px;">15,420 points</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">
-                        <div class="rank-number" style="background: #c0c0c0;">2</div>
-                        <div>
-                            <div style="font-weight: 600;">SpeedRunner</div>
-                            <div style="color: var(--text-secondary); font-size: 14px;">14,890 points</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">
-                        <div class="rank-number" style="background: #cd7f32;">3</div>
-                        <div>
-                            <div style="font-weight: 600;">QuizMaster</div>
-                            <div style="color: var(--text-secondary); font-size: 14px;">13,560 points</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">
-                        <div class="rank-number">4</div>
-                        <div>
-                            <div style="font-weight: 600;">BrainPower</div>
-                            <div style="color: var(--text-secondary); font-size: 14px;">12,340 points</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">
-                        <div class="rank-number">5</div>
-                        <div>
-                            <div style="font-weight: 600;">ThinkFast</div>
-                            <div style="color: var(--text-secondary); font-size: 14px;">11,780 points</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div data-include="components/leaderboard.html"></div>
 
             <!-- Learn Tab -->
-            <div id="learn" class="tab-content">
-                <div class="section-title">📚 Learn & Improve</div>
-                <div class="learn-card">
-                    <div style="font-weight: 600; margin-bottom: 8px;">🎯 Game Strategies</div>
-                    <div style="color: var(--text-secondary); font-size: 14px;">Pelajari strategi terbaik untuk meningkatkan skor dan mengalahkan lawan</div>
-                </div>
-                <div class="learn-card">
-                    <div style="font-weight: 600; margin-bottom: 8px;">⚡ Speed Tips</div>
-                    <div style="color: var(--text-secondary); font-size: 14px;">Tips dan trik untuk meningkatkan kecepatan bermain</div>
-                </div>
-                <div class="learn-card">
-                    <div style="font-weight: 600; margin-bottom: 8px;">🧠 Memory Techniques</div>
-                    <div style="color: var(--text-secondary); font-size: 14px;">Teknik memori yang akan membantu dalam mode blind</div>
-                </div>
-                <div class="learn-card">
-                    <div style="font-weight: 600; margin-bottom: 8px;">🏆 Tournament Guide</div>
-                    <div style="color: var(--text-secondary); font-size: 14px;">Panduan lengkap untuk mengikuti turnamen</div>
-                </div>
-                <div class="learn-card">
-                    <div style="font-weight: 600; margin-bottom: 8px;">📊 Analytics</div>
-                    <div style="color: var(--text-secondary); font-size: 14px;">Analisis performa untuk identifikasi area improvement</div>
-                </div>
-            </div>
+            <div data-include="components/learn.html"></div>
 
             <!-- Profile Tab -->
             <div id="profile" class="tab-content">
@@ -281,81 +213,13 @@
         </nav>
     </div>
     
-    <!-- DayGuesser Game Screen -->
-    <div id="game-screen" style="display:none">
-        <div id="game-container">
-            <div class="game-header">
-                <div class="game-title">DayGuesser</div>
-                <div class="game-controls">
-                    <button class="game-btn" onclick="backToMenu()">Kembali</button>
-                    <button class="game-btn" id="restart-game-btn">Restart</button>
-                </div>
-            </div>
-            
-            <div id="dayguesser-game">
-                <div id="overlay" style="display:none"></div>
+    <!-- DayGuesser Game Screen (include partial) -->
+    <div data-include="components/game-screen.html"></div>
 
-                <!-- countdown hanya berisi angka dan ditutup dengan benar -->
-                <div id="countdown" style="font-size: 200px; display: none; margin: 20px;"></div>
-
-                <!-- area permainan utama (pastikan id sesuai dengan game.js) -->
-                <div id="game-area">
-                    <div id="timer-display">Sisa waktu: 60 detik</div>
-                    <div id="combo-display">
-                        <span>Multiplier: <span id="multiplier-value">1x</span></span>
-                        <div id="combo-indicator">
-                            <span class="combo-dot"></span>
-                            <span class="combo-dot"></span>
-                            <span class="combo-dot"></span>
-                            <span class="combo-dot"></span>
-                            <span class="combo-dot"></span>
-                        </div>
-                    </div>
-                    <div id="score-lives">Skor: 0 | Nyawa: 5 | Benar: 0</div>
-
-                    <!-- pastikan id date-wheel ada -->
-                    <div id="wheel-container">
-                        <div id="date-wheel"></div>
-                    </div>
-
-                    <div id="buttons"></div>
-
-                    <button id="restart-btn">Restart Game</button>
-                    <button id="settings-btn">Shortcut Settings</button>
-                    <button onclick="repeatSpeech()">🔁 Ulang Pengucapan</button>
-                </div>
-
-                <div id="popup" style="display:none">
-                  <h2>Permainan Selesai</h2>
-                    <div class="popup-score-label">Skor:</div>
-                    <div id="final-score" class="popup-score-value"></div>
-                    <div id="final-correct" class="popup-correct"></div>
-                    <button onclick="restartGame()">Main Lagi</button>
-                </div>
-
-                <div id="settings-popup" style="display:none">
-                    <h2>Pengaturan Shortcut</h2>
-                    <form id="shortcut-form">
-                        <label>Senin: <input type="text" id="shortcut-senin" value="1" maxlength="1" required></label><br>
-                        <label>Selasa: <input type="text" id="shortcut-selasa" value="2" maxlength="1" required></label><br>
-                        <label>Rabu: <input type="text" id="shortcut-rabu" value="3" maxlength="1" required></label><br>
-                        <label>Kamis: <input type="text" id="shortcut-kamis" value="4" maxlength="1" required></label><br>
-                        <label>Jumat: <input type="text" id="shortcut-jumat" value="5" maxlength="1" required></label><br>
-                        <label>Sabtu: <input type="text" id="shortcut-sabtu" value="6" maxlength="1" required></label><br>
-                        <label>Minggu: <input type="text" id="shortcut-minggu" value="0" maxlength="1" required></label><br>
-                        <label>Main Lagi: <input type="text" id="shortcut-restart" value="Enter" required></label><br>
-                        <label>Ulang Pengucapan: <input type="text" id="shortcut-repeat" value=" " maxlength="1" required></label><br>
-                        <button type="submit">Simpan</button>
-                        <button type="button" id="cancel-settings">Batal</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+    <script src="scripts/include.js"></script>
     <script src="scripts/gameCard.js"></script>
+    <script src="scripts/main.js"></script>
     <script src="scripts/game.js"></script>
-    <script src="scripts/main.js">
-    </script>
+    
 </body>
 </html>

@@ -318,7 +318,8 @@
 
         function updateComboDisplay() {
             // Update multiplier text
-            document.getElementById("multiplier-value").textContent = `${multiplier}x`;
+            const multEl = document.getElementById("multiplier-value");
+            if (multEl) multEl.textContent = `${multiplier}x`;
 
             // Update dots
             const dots = document.querySelectorAll(".combo-dot");
@@ -347,13 +348,28 @@
         }
 
         // ======================
-        // Event Listeners
+        // Event Listeners (robust init)
         // ======================
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            
-            // Add touch / pointer feedback for mobile and prevent selecting when user scrolls/drags
+
+        // Kita tunggu dua kondisi:
+        //  - DOMContentLoaded (dokumen ter-parse)
+        //  - includesLoaded (partial sudah di-inject oleh include.js)
+        // Kedua event harus terjadi sebelum kita pasang handler yang mengakses elemen partial.
+        let domReady = (document.readyState === 'interactive' || document.readyState === 'complete');
+        let includesReady = false;
+        let bindingsInitialized = false;
+
+        function initGameBindings() {
+            if (bindingsInitialized) return;
+            if (!domReady || !includesReady) return;
+            bindingsInitialized = true;
+
+            // createParticles ada di main.js; cek dulu
+            if (typeof createParticles === 'function') {
+                try { createParticles(); } catch (err) { console.warn('createParticles error', err); }
+            }
+
+            // Setup touch/pointer feedback for .game-card
             const gameCards = document.querySelectorAll('.game-card');
             gameCards.forEach(card => {
                 let startX = 0;
@@ -362,13 +378,11 @@
                 const MOVE_THRESHOLD = 8; // px
 
                 card.addEventListener('pointerdown', (e) => {
-                    // ignore disabled cards
                     if (card.classList.contains('disabled')) return;
                     startX = e.clientX;
                     startY = e.clientY;
                     moved = false;
                     try { card.setPointerCapture(e.pointerId); } catch (err) {}
-                    // visual feedback
                     card.style.transform = 'scale(0.98)';
                 });
 
@@ -380,14 +394,11 @@
 
                 card.addEventListener('pointerup', (e) => {
                     try { card.releasePointerCapture(e.pointerId); } catch (err) {}
-                    // remove visual feedback
                     card.style.transform = '';
-                    // if user moved (scroll/drag), do not select
                     if (moved) return;
                     if (card.classList.contains('disabled')) return;
 
-                    // ignore clicks that originate from interactive controls inside the card
-                    // Robust check: 1) composedPath, 2) elementFromPoint (handles pointer capture), 3) e.target.closest
+                    // cek klik pada tombol info dll
                     let clickedInteractive = false;
                     const path = (e.composedPath && e.composedPath()) || (e.path) || [];
                     if (path && path.length) {
@@ -406,7 +417,6 @@
                     }
                 });
 
-                // fallback for touch-only devices: prevent click firing after drag
                 card.addEventListener('click', (e) => {
                     if (moved) {
                         e.stopImmediatePropagation();
@@ -414,7 +424,6 @@
                     }
                 });
 
-                // small touch feedback for older devices
                 card.addEventListener('touchstart', () => {
                     if (!card.classList.contains('disabled')) card.style.transform = 'scale(0.98)';
                 });
@@ -422,91 +431,100 @@
                     card.style.transform = '';
                 });
             });
-            
-            // Game mode change listener
-            //document.getElementById("game-mode").addEventListener("change", function(e) {
-               // gameMode = e.target.value;
-                //restartGame();
-            //});
 
-            // Game restart button
-            document.getElementById('restart-btn').addEventListener('click', function() {
-                if (gameState === 'countdown') return;
-                restartGame();
-            });
-            
-            // Game restart button in header
-            document.getElementById('restart-game-btn').addEventListener('click', function() {
-                if (gameState === 'countdown') return;
-                restartGame();
-            });
+            // restart buttons (cek eksistensi dulu)
+            const restartBtn = document.getElementById('restart-btn');
+            if (restartBtn) {
+                restartBtn.addEventListener('click', function() {
+                    if (gameState === 'countdown') return;
+                    restartGame();
+                });
+            }
+            const restartGameBtn = document.getElementById('restart-game-btn');
+            if (restartGameBtn) {
+                restartGameBtn.addEventListener('click', function() {
+                    if (gameState === 'countdown') return;
+                    restartGame();
+                });
+            }
 
-            // Tambahkan event listener untuk shortcut keyboard
+            // keyboard shortcuts
             document.addEventListener("keydown", function(event) {
-                // Handle Enter key (works in all states except countdown)
                 if (event.key === 'Enter' && gameState !== 'countdown') {
                     restartGame();
                     return;
                 }
-
-                // Block all other keys unless we're in playing state
                 if (gameState !== 'playing') return;
-
-                // Ignore if typing in an input field
-                if (document.activeElement.tagName === "INPUT") return;
-
-                // Handle day shortcuts
+                if (document.activeElement && document.activeElement.tagName === "INPUT") return;
                 const day = shortcutMapping[event.key];
+                if (day === 'repeatSpeech') {
+                    repeatSpeech();
+                    return;
+                }
                 if (day) {
                     guessDay(day);
                 }
-
-                // Shortcut "ulang pengucapan" (key " ")
                 if (event.key === ' ') {
                     repeatSpeech();
                     return;
                 }
-                
-                if (event.key === Object.keys(shortcutMapping).find(k => shortcutMapping[k] === 'repeatSpeech')) {
-                    repeatSpeech();
-                    return;
-                }
             });
-            
-            // Pengaturan modal shortcut
-            document.getElementById("settings-btn").addEventListener("click", function() {
-                document.getElementById("settings-popup").style.display = "block";
-            });
-            document.getElementById("cancel-settings").addEventListener("click", function() {
-                document.getElementById("settings-popup").style.display = "none";
-            });
-            document.getElementById("shortcut-form").addEventListener("submit", function(e) {
-                e.preventDefault();
-                // Ambil nilai shortcut baru dari form
-                const newMapping = {
-                    'Senin': document.getElementById("shortcut-senin").value,
-                    'Selasa': document.getElementById("shortcut-selasa").value,
-                    'Rabu': document.getElementById("shortcut-rabu").value,
-                    'Kamis': document.getElementById("shortcut-kamis").value,
-                    'Jumat': document.getElementById("shortcut-jumat").value,
-                    'Sabtu': document.getElementById("shortcut-sabtu").value,
-                    'Minggu': document.getElementById("shortcut-minggu").value,
-                    'Repeat': document.getElementById("shortcut-repeat").value
-                };
 
-                // Perbarui global shortcutMapping
-                shortcutMapping = {};
-                for (const day in newMapping) {
-                    let keyShortcut = newMapping[day];
-                    if (keyShortcut && keyShortcut.length === 1) {
-                        shortcutMapping[keyShortcut] = day;
-                    if (newMapping['Repeat']) {
-                            shortcutMapping[newMapping['Repeat']] = 'repeatSpeech';
+            // settings modal/buttons with checks
+            const settingsBtn = document.getElementById("settings-btn");
+            if (settingsBtn) settingsBtn.addEventListener("click", function() {
+                const sp = document.getElementById("settings-popup");
+                if (sp) sp.style.display = "block";
+            });
+            const cancelSettings = document.getElementById("cancel-settings");
+            if (cancelSettings) cancelSettings.addEventListener("click", function() {
+                const sp = document.getElementById("settings-popup");
+                if (sp) sp.style.display = "none";
+            });
+
+            const shortcutForm = document.getElementById("shortcut-form");
+            if (shortcutForm) {
+                shortcutForm.addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    const newMapping = {
+                        'Senin': document.getElementById("shortcut-senin") ? document.getElementById("shortcut-senin").value : '',
+                        'Selasa': document.getElementById("shortcut-selasa") ? document.getElementById("shortcut-selasa").value : '',
+                        'Rabu': document.getElementById("shortcut-rabu") ? document.getElementById("shortcut-rabu").value : '',
+                        'Kamis': document.getElementById("shortcut-kamis") ? document.getElementById("shortcut-kamis").value : '',
+                        'Jumat': document.getElementById("shortcut-jumat") ? document.getElementById("shortcut-jumat").value : '',
+                        'Sabtu': document.getElementById("shortcut-sabtu") ? document.getElementById("shortcut-sabtu").value : '',
+                        'Minggu': document.getElementById("shortcut-minggu") ? document.getElementById("shortcut-minggu").value : '',
+                        'Repeat': document.getElementById("shortcut-repeat") ? document.getElementById("shortcut-repeat").value : ''
+                    };
+
+                    shortcutMapping = {};
+                    for (const day in newMapping) {
+                        let keyShortcut = newMapping[day];
+                        if (keyShortcut && keyShortcut.length === 1) {
+                            shortcutMapping[keyShortcut] = day;
                         }
-
+                    }
+                    if (newMapping['Repeat'] && newMapping['Repeat'].length === 1) {
+                        shortcutMapping[newMapping['Repeat']] = 'repeatSpeech';
                     }
 
-                }
-                document.getElementById("settings-popup").style.display = "none";
+                    const sp = document.getElementById("settings-popup");
+                    if (sp) sp.style.display = "none";
+                });
+            }
+        }
+
+        // event flag updates
+        if (!domReady) {
+            document.addEventListener('DOMContentLoaded', () => {
+                domReady = true;
+                initGameBindings();
             });
+        } else {
+            // already ready
+        }
+
+        window.addEventListener('includesLoaded', () => {
+            includesReady = true;
+            initGameBindings();
         });

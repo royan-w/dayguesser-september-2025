@@ -1,0 +1,46 @@
+<div id="leaderboard" class="tab-content">
+    <div class="section-title">🏆 Leaderboard</div>
+    <div class="leaderboard-placeholder" style="padding:16px; color:var(--text-secondary);">
+        Konten leaderboard sementara — memuat...
+    </div>
+
+    <div class="section-title">🏆 Top Players</div>
+    <ul id="leaderboard-list"></ul>
+
+    <template id="leaderboard-item-tpl">
+        <li class="leaderboard-item">
+            <div class="leaderboard-rank">
+                <div class="rank-number" data-rank-style></div>
+                <div>
+                    <div style="font-weight:600;" data-player-name></div>
+                    <div style="color:var(--text-secondary); font-size:14px;" data-player-score></div>
+                </div>
+            </div>
+        </li>
+    </template>
+</div>
+
+<script>
+(function(){
+    const list = document.getElementById('leaderboard-list');
+    if (!list) return;
+    // hindari render ulang jika sudah ada isi
+    if (list.children.length) return;
+
+    const players = [
+      {rank:1, name:'ProGamer123', score:'15,420 points', style:'#ffd700'},
+      {rank:2, name:'SpeedRunner', score:'14,890 points', style:'#c0c0c0'},
+      {rank:3, name:'QuizMaster', score:'13,560 points', style:'#cd7f32'}
+    ];
+    const tpl = document.getElementById('leaderboard-item-tpl');
+    players.forEach(p => {
+        const item = tpl.content.cloneNode(true);
+        const rankEl = item.querySelector('[data-rank-style]');
+        rankEl.textContent = p.rank;
+        rankEl.style.background = p.style;
+        item.querySelector('[data-player-name]').textContent = p.name;
+        item.querySelector('[data-player-score]').textContent = p.score;
+        list.appendChild(item);
+    });
+})();
+</script>

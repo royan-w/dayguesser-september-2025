@@ -13,13 +13,15 @@
         }
         
         #game-container {
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 1100px;      /* beri ruang lebih di layar lebar */
+            width: 100%;
+            margin: 24px auto;     /* center dengan jarak atas/bawah */
             background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.55);
+            padding: 18px;
             position: relative;
+            box-sizing: border-box;
         }
         
         .game-header {
@@ -62,29 +64,36 @@
         
         #dayguesser-game {
             width: 100%;
+            box-sizing: border-box;
         }
         
-        #dayguesser-game body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: auto;
-            margin: 0;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-        }
-        
+        /* optional inner container */
         #dayguesser-game #game-container-inner {
             background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px var(--shadow);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
             text-align: center;
             width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
+            margin: 12px auto;
+        }
+        
+        /* ensure buttons area lays out cleanly */
+        #dayguesser-game #buttons, .buttons-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            width: 100%;
+            margin-top: 8px;
+        }
+        #dayguesser-game #buttons button, .buttons-row button {
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
         }
         
         #dayguesser-game .correct { color: #4CAF50; } 
@@ -215,6 +224,9 @@
             color: white;
             text-shadow: 0 0 20px rgba(255,255,255,0.5);
             font-weight: bold;
+            display:block;
+            text-align:center;
+            margin: 8px 0;
         }
 
         /* overlay should be global so element outside #dayguesser-game is styled */
@@ -231,4 +243,138 @@
         #dayguesser-game button:active {
             transform: scale(0.95);
             opacity: 0.8;
+        }
+
+        /* Layout fixes untuk tampilan game (override terakhir supaya mudah dicari) */
+        #game-container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+        
+        /* Header / HUD: pada layar besar tampil berbaris, mobile kolom */
+        #hud {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        @media (min-width: 720px) {
+            #hud {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        /* Buat area pertanyaan (date wheel) jadi full-width bar dengan center date */
+        #date-wheel {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-sizing: border-box;
+            margin: 8px 0;
+            min-height: 56px;
+        }
+        
+        /* Teks tanggal utama (di-render sebagai .date-item.current oleh JS) */
+        #date-wheel .date-item {
+            color: var(--text-secondary, #bdbdbd);
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.3;
+        }
+        #date-wheel .date-item.current {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text, #fff);
+            border: 3px solid #2ecc71; /* border hijau seperti di foto */
+            padding: 10px 18px;
+            border-radius: 6px;
+            background: rgba(46,204,113,0.02);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Score / timer / multiplier styling */
+        #timer-display, #score-lives, #multiplier {
+            color: var(--text, #fff);
+            font-weight: 600;
+            text-align: center;
+        }
+        @media (min-width: 720px) {
+            #timer-display, #score-lives, #multiplier {
+                text-align: left;
+            }
+        }
+        
+        /* Combo dots alignment */
+        #combo { display:flex; gap:8px; align-items:center; justify-content:center; }
+        @media (min-width: 720px) {
+            #combo { justify-content:flex-start; }
+        }
+        
+        /* Buttons row: rapi dan konsisten ukuran */
+        .buttons-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin-top: 14px;
+        }
+        @media (max-width: 640px) {
+            .buttons-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        .buttons-row button {
+            padding: 12px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            min-height: 48px;
+        }
+        
+        /* Buat area tombol kontrol bawah rata tengah */
+        .popup-actions, .game-controls {
+            display:flex;
+            gap:10px;
+            align-items:center;
+        }
+        
+        /* Pastikan countdown besar di tengah saat aktif */
+        #countdown {
+            display:block;
+            text-align:center;
+            font-weight:800;
+            margin: 8px 0;
+        }
+        
+        /* Jaga kontras/background agar tidak tumpang tindih */
+        #dayguesser-game {
+            background: rgba(0,0,0,0.35);
+            padding: 18px;
+            border-radius: 12px;
+        }
+        
+        /* kecilkan jarak kartu dan keseluruhan box-shadow */
+        #game-container, #dayguesser-game {
+            box-shadow: 0 8px 22px rgba(0,0,0,0.55);
+        }
+        
+        /* Pastikan popup tetap overlay full-screen */
+        #popup {
+            display: none; /* ditoggle oleh JS */
+            position: fixed;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
         }
