@@ -41,9 +41,34 @@
 
                 <div class="section-title">Singleplayer</div>
                 <div class="card-container">
-                    <div class="game-card" data-mode="sprint-single">
-                        <div class="card-title">Sprint</div>
-                        <div class="card-subtitle">raih skor tertinggi dalam waktu terbatas</div>
+                    <!-- changed: sprint-single menjadi flip card -->
+                <div class="game-card flip-card" data-mode="sprint-single" tabindex="0" role="button" aria-pressed="false">
+                        <div class="flip-inner">
+                            <div class="flip-front">
+                                <div class="card-image">
+                                    <img src="assets/game card/sprint mode.png" alt="Sprint Mode" />
+                                </div>
+                                <div class="front-content">
+                                    <button class="info-btn info-btn-front" onclick="event.stopPropagation(); flipCard(this.closest('.flip-card'), event)" aria-label="Show info">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="flip-back">
+                                <div class="back-content">
+                                    <button class="info-btn info-btn-back" onclick="flipCard(this.closest('.flip-card'), event)" aria-label="Close info">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="card-back-title">Sprint Mode</div>
+                                    <div class="card-back-text">Raih skor tertinggi dalam waktu terbatas.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- changed: blind-single menjadi flip card -->
@@ -59,7 +84,6 @@
                                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
                                         </svg>
                                     </button>
-                                    <div class="card-title">Blind Mode</div>
                                 </div>
                             </div>
                             
@@ -77,10 +101,6 @@
                         </div>
                     </div>
 
-                    <div class="game-card" data-mode="time-single">
-                        <div class="card-title">Time Attack</div>
-                        <div class="card-subtitle">Beat your time</div>
-                    </div>
                     <div class="game-card disabled" aria-disabled="true" title="Not available">
                         <div class="card-title">Classic</div>
                         <div class="card-subtitle">Tidak tersedia</div>
