@@ -158,20 +158,23 @@
             text-align: center;
         }
 
-        #dayguesser-game #wheel-container {
-            height: 200px;
+        /* wheel wrapper: provide a stable relative container for the date wheel */
+        #dayguesser-game .wheel-container {
             width: 100%;
-            overflow: hidden;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 15px;
+            box-sizing: border-box;
+            position: relative; /* parent for any inside absolute children if needed */
+            min-height: 80px;
         }
 
         #dayguesser-game #date-wheel {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
             width: 100%;
             transition: transform 0.4s ease-out;
+            box-sizing: border-box;
         }
 
         #dayguesser-game .date-item {
@@ -213,31 +216,31 @@
         #dayguesser-game .combo-dot.active {
             box-shadow: 0 0 5px currentColor;
         }
-        /* countdown should be global so element outside #dayguesser-game is styled */
+        /* countdown styling — high z so it appears above overlay */
         #countdown {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 120px;
-            z-index: 3500; /* above #game-screen (2000) */
+            z-index: 4500; /* above overlay and popup */
             color: white;
             text-shadow: 0 0 20px rgba(255,255,255,0.5);
             font-weight: bold;
-            display:block;
-            text-align:center;
+            display: none;
+            text-align: center;
             margin: 8px 0;
         }
 
-        /* overlay should be global so element outside #dayguesser-game is styled */
+        /* overlay covers the game screen when active */
         #overlay {
             display: none;
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.75);
-            z-index: 3000; /* above #game-screen (2000) but below popup if needed */
+            background: rgba(0,0,0,0.6);
+            z-index: 3000; /* sits above game-screen but below popup */
         }
 
         #dayguesser-game button:active {
@@ -368,13 +371,31 @@
             box-shadow: 0 8px 22px rgba(0,0,0,0.55);
         }
         
-        /* Pastikan popup tetap overlay full-screen */
-        #popup {
+        /* Popup inside game-screen — scoped to avoid global override */
+        #game-screen #popup {
             display: none; /* ditoggle oleh JS */
             position: fixed;
             inset: 0;
+            display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(0,0,0,0.6);
-            z-index: 999;
+            z-index: 4000; /* above overlay and game contents */
+        }
+
+        /* Perbesar tombol Settings & Restart agar lebih mudah dilihat dan disentuh */
+        #game-screen .game-controls button,
+        #game-screen #settings-btn,
+        #game-screen #restart-btn {
+            padding: 12px 16px;
+            font-size: 20px;
+            min-width: 56px;
+            min-height: 56px;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }

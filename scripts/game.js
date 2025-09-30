@@ -440,6 +440,14 @@
                     restartGame();
                 });
             }
+            // header "Kembali" button -> kembali ke main menu
+            const backBtn = document.getElementById('back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', function() {
+                    if (gameState === 'countdown') return;
+                    backToMenu();
+                });
+            }
             const restartGameBtn = document.getElementById('restart-game-btn');
             if (restartGameBtn) {
                 restartGameBtn.addEventListener('click', function() {

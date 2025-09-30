@@ -3,6 +3,7 @@
         <div class="game-header">
             <div class="game-title">DayGuesser</div>
             <div class="game-controls">
+                <button id="back-btn" aria-label="Kembali">← Kembali</button>
                 <button id="settings-btn" aria-label="Settings">⚙️</button>
                 <button id="restart-btn" aria-label="Restart">⟲</button>
             </div>
@@ -29,7 +30,9 @@
                 </div>
 
                 <!-- Date wheel / questions -->
-                <div id="date-wheel" class="date-wheel"></div>
+                <div id="wheel-container" class="wheel-container">
+                    <div id="date-wheel" class="date-wheel"></div>
+                </div>
 
                 <!-- Buttons (hari) -->
                 <div id="buttons" class="buttons-row"></div>
