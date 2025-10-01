@@ -66,6 +66,7 @@
         let lives = 5;
         let consecutiveCorrect = 0;
         let correctAnswers = 0;
+        let totalAnswered = 0; // new: total jawaban yang diberikan
         let multiplier = 1;
         let timeLeft = 60;
         let countdownInterval;
@@ -136,6 +137,7 @@
                 lives = 5;
                 consecutiveCorrect = 0;
                 correctAnswers = 0;
+                totalAnswered = 0;
                 timeLeft = 60;
                 startTimer();
 
@@ -234,6 +236,8 @@
 
             const correctDay = daysOfWeek[dates[currentIndex].getDay()];
             const isCorrect = guessedDay === correctDay;
+            // hitung jawaban yang sudah diberikan
+            totalAnswered++;
             
             if (isCorrect) {
                 correctAnswers++;
@@ -288,19 +292,35 @@
         }
 
         function showGameOver() {
-            // set big numeric score
+            // pastikan timer dan speech dihentikan
+            clearInterval(countdownInterval);
+            speechSynthesis.cancel();
+
+            // isi teks pada popup (pastikan elemen ada)
             const finalScoreEl = document.getElementById('final-score');
-            if (finalScoreEl) finalScoreEl.textContent = score;
+            if (finalScoreEl) finalScoreEl.textContent = String(score ?? 0);
 
-            // set small "jawaban benar" line
-            const finalCorrectEl = document.getElementById('final-correct');
-            if (finalCorrectEl) finalCorrectEl.textContent = `(${correctAnswers} jawaban benar)`;
+            const finalCorrectCountEl = document.getElementById('final-correct-count');
+            const finalWrongCountEl = document.getElementById('final-wrong-count');
+            const wrongAnswers = Math.max(0, (totalAnswered ?? 0) - (correctAnswers ?? 0));
+            if (finalCorrectCountEl) finalCorrectCountEl.textContent = String(correctAnswers ?? 0);
+            if (finalWrongCountEl) finalWrongCountEl.textContent = String(wrongAnswers);
 
-            // ensure overlay visible and popup on top
+            // tampilkan overlay dan popup; gunakan flex supaya center dari CSS berlaku
             const overlay = document.getElementById('overlay');
             if (overlay) overlay.style.display = 'block';
-            document.getElementById('popup').style.display = 'block';
-            speechSynthesis.cancel();
+
+            const popupEl = document.getElementById('popup');
+            if (popupEl) {
+                // remove any accidental inline positioning/display that breaks centering
+                popupEl.style.display = 'flex';
+                popupEl.style.position = 'fixed';
+                popupEl.style.inset = '0'; // top/right/bottom/left = 0
+                popupEl.style.alignItems = 'center';
+                popupEl.style.justifyContent = 'center';
+                popupEl.style.zIndex = '4000';
+            }
+
             gameState = 'gameover';
         }
 

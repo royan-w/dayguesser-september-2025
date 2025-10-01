@@ -121,18 +121,16 @@
             font-size: 18px;
             font-weight: bold;
         }
+        /* GANTI blok popup yang menggunakan top/left/transform dengan rule overlay yang center */
         #dayguesser-game #popup, #dayguesser-game #settings-popup {
-            display: none;
+            display: none;                /* tetap tersembunyi sampai JS set 'flex' atau ganti class */
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--card-bg);
+            inset: 0;                     /* top:0; right:0; bottom:0; left:0; */
+            align-items: center;
+            justify-content: center;      /* center anak secara vertikal & horizontal */
+            background: rgba(0,0,0,0.45); /* dark overlay */
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
-            text-align: center;
-            color: var(--text-primary);
+            box-sizing: border-box;
             z-index: 3500;
         }
         /* popup score styling */
@@ -142,7 +140,7 @@
             margin-top: 6px;
         }
         #dayguesser-game #popup .popup-score-value {
-            font-size: 48px;
+            font-size: 128px;
             font-weight: 800;
             line-height: 1;
             margin: 6px 0;
@@ -151,6 +149,20 @@
             font-size: 13px;
             color: var(--text-secondary);
             margin-bottom: 12px;
+        }
+        /* Warna untuk angka benar/salah pada popup (hanya angka) */
+        #game-screen #popup .popup-correct .correct-count {
+            color: #4CAF50; /* hijau */
+            font-weight: 700;
+        }
+        #game-screen #popup .popup-correct .wrong-count {
+            color: #ff4d4d; /* merah */
+            font-weight: 700;
+        }
+        /* spasi/visual separator */
+        #game-screen #popup .popup-correct .popup-sep {
+            margin: 0 8px;
+            color: var(--text-secondary);
         }
         #dayguesser-game #settings-popup input {
             margin: 5px;
@@ -351,6 +363,15 @@
             align-items:center;
         }
         
+        /* Center tombol di popup Game Over */
+        #game-screen #popup .popup-actions {
+            display: flex;
+            justify-content: center; /* center horizontally */
+            align-items: center;     /* center vertically if needed */
+            gap: 12px;               /* jarak antar tombol */
+            margin-top: 16px;        /* ruang dari konten popup */
+        }
+        
         /* Pastikan countdown besar di tengah saat aktif */
         #countdown {
             display:block;
@@ -373,14 +394,25 @@
         
         /* Popup inside game-screen — scoped to avoid global override */
         #game-screen #popup {
-            display: none; /* ditoggle oleh JS */
+            display: none; /* JS will set to 'flex' */
             position: fixed;
             inset: 0;
-            display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.6);
-            z-index: 4000; /* above overlay and game contents */
+            background: rgba(0,0,0,0.45); /* dark overlay behind popup content */
+            z-index: 4000;
+        }
+
+        /* Pastikan isi popup terlihat (background, padding, warna teks) */
+        #game-screen #popup .popup-content {
+            background: var(--card-bg, #222);
+            color: var(--text-primary, #fff);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 640px;
+            width: calc(100% - 40px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
         }
 
         /* Perbesar tombol Settings & Restart agar lebih mudah dilihat dan disentuh */
