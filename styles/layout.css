@@ -1,4 +1,4 @@
-  /* Menu Utama */
+/* Menu Utama */
         .app-container {
             max-width: 428px;
             margin: 0 auto;
@@ -54,11 +54,14 @@
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            /* animation removed to prevent content sliding/fading when switching tabs */
+            animation: none !important;
         }
 
         .tab-content.active {
             display: block;
+            /* ensure no animation on active state */
+            animation: none !important;
         }
 
         @keyframes fadeIn {
@@ -81,12 +84,16 @@
             padding: 12px 8px;
             -webkit-overflow-scrolling: touch; /* smooth on iOS */
             scroll-snap-type: x mandatory;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(100,100,100,0.4) transparent;
+            /* hide native scrollbar */
+            -ms-overflow-style: none; /* IE/Edge */
+            scrollbar-width: none; /* Firefox */
         }
 
+        /* hide webkit scrollbar */
         .card-container::-webkit-scrollbar {
-            height: 8px;
+            height: 0;
+            width: 0;
+            display: none;
         }
         .card-container::-webkit-scrollbar-thumb {
             background: rgba(100,100,100,0.35);
@@ -266,4 +273,3 @@
             90% { opacity: 0.3; }
             100% { transform: translateY(-10px) rotate(360deg); opacity: 0; }
         }
-        
