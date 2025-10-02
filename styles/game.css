@@ -48,9 +48,9 @@
         }
         
         .game-btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             border: none;
-            border-radius: 8px;
+            border-radius: 2px;
             background: var(--accent);
             color: white;
             cursor: pointer;
@@ -419,8 +419,8 @@
         #game-screen .game-controls button,
         #game-screen #settings-btn,
         #game-screen #restart-btn {
-            padding: 12px 16px;
-            font-size: 20px;
+            padding: 6px 10px;
+            font-size: 16px;
             min-width: 56px;
             min-height: 56px;
             width: auto;
@@ -431,3 +431,134 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Day wheel styles (dipindahkan dari inline <style> di components/game-screen.html) */
+        #game-screen .days-container { width:320px; height:320px; position:relative; margin:0 auto; }
+        #game-screen svg { width:100%; height:100%; display:block; }
+        #game-screen .segment{ fill:none; stroke:#9a3bff; stroke-width:12; stroke-linecap:butt; stroke-linejoin:round; filter: drop-shadow(0 6px 10px rgba(108,9,230,0.71)); }
+        #game-screen .segment-glow{ fill:none; stroke:#9a3bff; stroke-width:2; stroke-opacity:.85; filter: blur(6px) drop-shadow(0 8px 26px rgba(154,59,255,0.18)); }
+        #game-screen .sep{ stroke:rgba(255,255,255,0.06); stroke-width:2; }
+        #game-screen .core{ fill:#000; stroke:rgba(255,255,255,0.02); stroke-width:2; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6) inset); }
+        #game-screen .label{ fill:#fff; font-weight:700; font-size:16px; letter-spacing:0.4px; user-select:none; }
+        @media (min-width:420px){ #game-screen .label { font-size:18px; } }
+        @media (max-width:340px){ #game-screen .label { font-size:13px; } }
+        #game-screen .hit{ fill:none; stroke: transparent; stroke-width: 44; cursor:pointer; pointer-events: stroke; }
+        /* ensure SVG sits behind the HTML center button */
+        #game-screen svg {
+            position: relative;
+            z-index: 0;
+        }
+
+        /* make selector as specific as the generic buttons rule so it cannot be overridden */
+        #dayguesser-game #buttons .center-btn {
+            -webkit-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
+            padding: 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 34%;
+            height: 34%;
+            border-radius: 50% !important;
+            background: #111;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.03);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            z-index: 1100;               /* cukup tinggi agar selalu di atas SVG but below global overlays */
+            overflow: visible;
+            pointer-events: auto;
+        }
+        
+        /* outer glow for center button (soft radial fill) - match reference */
+        #dayguesser-game #buttons .center-btn::before{
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 180%;
+            height: 180%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 40%, #9a3bff, rgba(154,59,255,0) 40%);
+            filter: blur(14px);
+            opacity: 0.55;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* neon stroked ring (matches outer ring look) */
+        #dayguesser-game #buttons .center-btn::after{
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: calc(100% + 28px);
+            height: calc(100% + 28px);
+            border-radius: 50%;
+            border: 6px solid #9a3bff;
+            box-shadow: 0 6px 14px rgba(154,59,255,0.28), 0 10px 30px rgba(154,59,255,0.12);
+            filter: blur(3px);
+            opacity: 0.95;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        /* ensure the flex wrapper centers the days-container both axes */
+        #dayguesser-game #buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* vertical centering so .days-container sits exactly centered */
+        }
+
+        /* make the days container the positioned reference for the absolute center button */
+        #dayguesser-game #buttons .days-container {
+            position: relative;   /* required so .center-btn absolute positions relative to this box */
+            width: 320px;
+            height: 320px;
+            margin: 0 auto;
+            display: block;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        /* ensure svg does not change layout or capture pointer events intended for hit paths */
+        #dayguesser-game #buttons .days-container svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* individual .hit paths still use pointer-events: stroke */
+        }
+
+        /* allow interactive elements inside to receive events */
+        #dayguesser-game #buttons .days-container .hit,
+        #dayguesser-game #buttons .center-btn {
+            pointer-events: auto;
+        }
+
+        /* Allow day labels in SVG to be interactive (click/touch the text) */
+        #game-screen .label,
+        #game-screen .labelPath {
+            pointer-events: auto;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Fix for center button visibility */
+        #centerBtn {
+            display: flex !important;
+            visibility: visible !important;
+            z-index: 1500 !important;
+            align-items: center;
+            justify-content: center;
+        }
+

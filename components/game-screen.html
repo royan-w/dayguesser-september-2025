@@ -3,9 +3,21 @@
         <div class="game-header">
             <div class="game-title">DayGuesser</div>
             <div class="game-controls">
-                <button id="back-btn" class="game-btn" aria-label="Kembali">← Kembali</button>
-                <button id="settings-btn" class="game-btn" aria-label="Settings">⚙️</button>
-                <button id="restart-btn" class="game-btn" aria-label="Restart">⟲</button>
+                <button id="back-btn" class="game-btn" aria-label="Kembali" title="Kembali">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="vertical-align:middle;">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button id="settings-btn" class="game-btn" aria-label="Settings" title="Settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="vertical-align:middle;">
+                        <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.56-.22l-2.39.96a7.02 7.02 0 0 0-1.66-.92L14.5 2.5a.5.5 0 0 0-.44-.38h-3.12a.5.5 0 0 0-.44.38L9.4 4.37c-.5.23-.95.55-1.45.93l-2.39-.96a.5.5 0 0 0-.56.22L1.08 10.88a.5.5 0 0 0 .12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L1.2 15.52a.5.5 0 0 0-.12.61l1.92 3.32c.11.2.35.28.56.22l2.39-.96c.5.38 1.05.69 1.66.92l.2 1.87c.03.22.22.38.44.38h3.12c.22 0 .41-.16.44-.38l.2-1.87c.61-.23 1.17-.54 1.66-.92l2.39.96c.21.08.45 0 .56-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.03-1.58zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button id="restart-btn" class="game-btn" aria-label="Restart" title="Restart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="vertical-align:middle;">
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6a6 6 0 0 1-6 6c-3.31 0-6-2.69-6-6H4a8 8 0 0 0 8 8c4.42 0 8-3.58 8-8s-3.58-8-8-8z" fill="currentColor"/>
+                    </svg>
+                </button>
             </div>
         </div>
         
@@ -34,8 +46,22 @@
                     <div id="date-wheel" class="date-wheel"></div>
                 </div>
 
-                <!-- Buttons (hari) -->
-                <div id="buttons" class="buttons-row"></div>
+                <!-- Buttons (hari) — diganti dengan day wheel (SVG) dari referensi -->
+                <div id="buttons" style="display:flex; justify-content:center;">
+                  <div class="days-container" role="group" aria-label="Hari dalam seminggu" id="day-wheel-component">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" role="img">
+                      <defs id="textDefs"></defs>
+                      <g id="glowLayer"></g>
+                      <g id="segments"></g>
+                      <g id="separators"></g>
+                      <circle id="core" class="core" cx="200" cy="200" r="110" />
+                      <defs id="textDefs2"></defs>
+                      <g id="labels"></g>
+                      <g id="hits"></g>
+                    </svg>
+                    <button class="center-btn" id="centerBtn" aria-pressed="false" aria-label="Minggu">MINGGU</button>
+                  </div>
+                </div>
             </div>
 
             <!-- Popup hasil game (struktur/class sesuai CSS) -->
@@ -59,18 +85,19 @@
             <!-- Settings popup (struktur sesuai CSS) -->
             <div id="settings-popup" style="display:none" role="dialog" aria-hidden="true" aria-labelledby="settings-title" tabindex="-1">
                 <div class="settings-content">
-                    <h3 id="settings-title">Pengaturan</h3>
+                    <h3 id="settings-title">Ubah Tombol Shortcut</h3>
                     <form id="shortcut-form">
                         <!-- optional inputs; script checks existence before using -->
-                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <label><span>Senin</span><input id="shortcut-senin" maxlength="1"></label>
-                            <label><span>Selasa</span><input id="shortcut-selasa" maxlength="1"></label>
-                            <label><span>Rabu</span><input id="shortcut-rabu" maxlength="1"></label>
-                            <label><span>Kamis</span><input id="shortcut-kamis" maxlength="1"></label>
-                            <label><span>Jumat</span><input id="shortcut-jumat" maxlength="1"></label>
-                            <label><span>Sabtu</span><input id="shortcut-sabtu" maxlength="1"></label>
-                            <label><span>Minggu</span><input id="shortcut-minggu" maxlength="1"></label>
-                            <label><span>Repeat</span><input id="shortcut-repeat" maxlength="1"></label>
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                             <label>Senin: <input type="text" id="shortcut-senin" value="1" maxlength="1" required></label><br>
+                            <label>Selasa: <input type="text" id="shortcut-selasa" value="2" maxlength="1" required></label><br>
+                            <label>Rabu: <input type="text" id="shortcut-rabu" value="3" maxlength="1" required></label><br>
+                            <label>Kamis: <input type="text" id="shortcut-kamis" value="4" maxlength="1" required></label><br>
+                            <label>Jumat: <input type="text" id="shortcut-jumat" value="5" maxlength="1" required></label><br>
+                            <label>Sabtu: <input type="text" id="shortcut-sabtu" value="6" maxlength="1" required></label><br>
+                            <label>Minggu: <input type="text" id="shortcut-minggu" value="0" maxlength="1" required></label><br>
+                            <label>Main Lagi: <input type="text" id="shortcut-restart" value="Enter" required></label><br>
+                            <label>Ulang Pengucapan: <input type="text" id="shortcut-repeat" value=" " maxlength="1" required></label><br>
                         </div>
                         <div style="margin-top:8px;">
                             <button type="submit" class="game-btn">Simpan</button>
