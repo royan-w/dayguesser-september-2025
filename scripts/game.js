@@ -71,17 +71,6 @@
         let timeLeft = 60;
         let countdownInterval;
         let cachedVoice = null;
-        
-        // Mapping default: tombol -> hari. Misal, tekan "1" untuk "Senin", "2" untuk "Selasa", dst.
-        let shortcutMapping = {
-            '1': 'Senin',
-            '2': 'Selasa',
-            '3': 'Rabu',
-            '4': 'Kamis',
-            '5': 'Jumat',
-            '6': 'Sabtu',
-            '0': 'Minggu'
-        };
 
         function generateRandomDate() {
             const start = new Date(1000, 0, 1);
@@ -219,7 +208,7 @@
                 }
             }
         }
-
+        
         function renderButtons() {
             // Tombol biasa digantikan oleh SVG wheel jika available.
             // Jika SVG tidak ada, fallback: buat tombol teks sederhana.
@@ -523,169 +512,14 @@
             if (!domReady || !includesReady) return;
             bindingsInitialized = true;
 
-            // buat dan ikat SVG day wheel sebelum renderButtons/fallback
-            bindWheelHandlers();
+            // Initialize all button handlers from gameButtons.js
+            if (typeof initGameButtons === 'function') {
+                initGameButtons();
+            }
 
             // createParticles ada di main.js; cek dulu
             if (typeof createParticles === 'function') {
                 try { createParticles(); } catch (err) { console.warn('createParticles error', err); }
-            }
-
-            // Fix: Add explicit binding for settings and restart buttons
-            const settingsBtn = document.getElementById("settings-btn");
-            if (settingsBtn) {
-                settingsBtn.addEventListener("click", function() {
-                    const sp = document.getElementById("settings-popup");
-                    if (sp) sp.style.display = "block";
-                });
-            }
-            
-            const restartBtn = document.getElementById("restart-btn");
-            if (restartBtn) {
-                restartBtn.addEventListener("click", function() {
-                    if (gameState === 'countdown') return;
-                    restartGame();
-                });
-            }
-
-            // Setup touch/pointer feedback for .game-card
-            const gameCards = document.querySelectorAll('.game-card');
-            gameCards.forEach(card => {
-                let startX = 0;
-                let startY = 0;
-                let moved = false;
-                const MOVE_THRESHOLD = 8; // px
-
-                card.addEventListener('pointerdown', (e) => {
-                    if (card.classList.contains('disabled')) return;
-                    startX = e.clientX;
-                    startY = e.clientY;
-                    moved = false;
-                    try { card.setPointerCapture(e.pointerId); } catch (err) {}
-                    card.style.transform = 'scale(0.98)';
-                });
-
-                card.addEventListener('pointermove', (e) => {
-                    if (Math.hypot(e.clientX - startX, e.clientY - startY) > MOVE_THRESHOLD) {
-                        moved = true;
-                    }
-                });
-
-                card.addEventListener('pointerup', (e) => {
-                    try { card.releasePointerCapture(e.pointerId); } catch (err) {}
-                    card.style.transform = '';
-                    if (moved) return;
-                    if (card.classList.contains('disabled')) return;
-
-                    // cek klik pada tombol info dll
-                    let clickedInteractive = false;
-                    const path = (e.composedPath && e.composedPath()) || (e.path) || [];
-                    if (path && path.length) {
-                        clickedInteractive = path.some(el => el && el.classList && (el.classList.contains('info-btn') || el.classList.contains('back-info-btn') || el.classList.contains('close-back')));
-                    }
-                    if (!clickedInteractive && typeof document.elementFromPoint === 'function') {
-                        const el = document.elementFromPoint(e.clientX, e.clientY);
-                        if (el && el.closest && el.closest('.info-btn, .back-info-btn, .close-back')) clickedInteractive = true;
-                    }
-                    if (!clickedInteractive && e.target && e.target.closest && e.target.closest('.info-btn, .back-info-btn, .close-back')) clickedInteractive = true;
-                    if (clickedInteractive) return;
-
-                    const mode = card.dataset.mode;
-                    if (mode) {
-                        selectGameMode(mode, card);
-                    }
-                });
-
-                card.addEventListener('click', (e) => {
-                    if (moved) {
-                        e.stopImmediatePropagation();
-                        e.preventDefault();
-                    }
-                });
-
-                card.addEventListener('touchstart', () => {
-                    if (!card.classList.contains('disabled')) card.style.transform = 'scale(0.98)';
-                });
-                card.addEventListener('touchend', () => {
-                    card.style.transform = '';
-                });
-            });
-
-            // header "Kembali" button -> kembali ke main menu
-            const backBtn = document.getElementById('back-btn');
-            if (backBtn) {
-                backBtn.addEventListener('click', function() {
-                    if (gameState === 'countdown') return;
-                    backToMenu();
-                });
-            }
-            const restartGameBtn = document.getElementById('restart-game-btn');
-            if (restartGameBtn) {
-                restartGameBtn.addEventListener('click', function() {
-                    if (gameState === 'countdown') return;
-                    restartGame();
-                });
-            }
-
-            // keyboard shortcuts
-            document.addEventListener("keydown", function(event) {
-                if (event.key === 'Enter' && gameState !== 'countdown') {
-                    restartGame();
-                    return;
-                }
-                if (gameState !== 'playing') return;
-                if (document.activeElement && document.activeElement.tagName === "INPUT") return;
-                const day = shortcutMapping[event.key];
-                if (day === 'repeatSpeech') {
-                    repeatSpeech();
-                    return;
-                }
-                if (day) {
-                    guessDay(day);
-                }
-                if (event.key === ' ') {
-                    repeatSpeech();
-                    return;
-                }
-            });
-
-            // settings modal/buttons with checks
-            // Remove duplicate declaration of settingsBtn
-            const cancelSettings = document.getElementById("cancel-settings");
-            if (cancelSettings) cancelSettings.addEventListener("click", function() {
-                const sp = document.getElementById("settings-popup");
-                if (sp) sp.style.display = "none";
-            });
-
-            const shortcutForm = document.getElementById("shortcut-form");
-            if (shortcutForm) {
-                shortcutForm.addEventListener("submit", function(e) {
-                    e.preventDefault();
-                    const newMapping = {
-                        'Senin': document.getElementById("shortcut-senin") ? document.getElementById("shortcut-senin").value : '',
-                        'Selasa': document.getElementById("shortcut-selasa") ? document.getElementById("shortcut-selasa").value : '',
-                        'Rabu': document.getElementById("shortcut-rabu") ? document.getElementById("shortcut-rabu").value : '',
-                        'Kamis': document.getElementById("shortcut-kamis") ? document.getElementById("shortcut-kamis").value : '',
-                        'Jumat': document.getElementById("shortcut-jumat") ? document.getElementById("shortcut-jumat").value : '',
-                        'Sabtu': document.getElementById("shortcut-sabtu") ? document.getElementById("shortcut-sabtu").value : '',
-                        'Minggu': document.getElementById("shortcut-minggu") ? document.getElementById("shortcut-minggu").value : '',
-                        'Repeat': document.getElementById("shortcut-repeat") ? document.getElementById("shortcut-repeat").value : ''
-                    };
-
-                    shortcutMapping = {};
-                    for (const day in newMapping) {
-                        let keyShortcut = newMapping[day];
-                        if (keyShortcut && keyShortcut.length === 1) {
-                            shortcutMapping[keyShortcut] = day;
-                        }
-                    }
-                    if (newMapping['Repeat'] && newMapping['Repeat'].length === 1) {
-                        shortcutMapping[newMapping['Repeat']] = 'repeatSpeech';
-                    }
-
-                    const sp = document.getElementById("settings-popup");
-                    if (sp) sp.style.display = "none";
-                });
             }
         }
 
